@@ -22,7 +22,7 @@ def die(msg, code=1):
     sys.exit(code)
 
 def get_soup(url):
-    """ Funkce parsuje url a předchází chybám """
+    """ Funkce parsuje url """
     r = requests.get(url)
     return BeautifulSoup(r.text, "html.parser")
 
