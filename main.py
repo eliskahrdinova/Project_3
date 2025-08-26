@@ -14,11 +14,6 @@ from bs4 import BeautifulSoup
 
 DISTRICT_NAME = "Benešov"
 SESSION = requests.Session()
-HEADERS = {
-    "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                   "ElectionsScraper/1.0"),
-    "Accept-Language": "cs,en;q=0.9",
-}
 
 # pomocné funkce
 
@@ -29,7 +24,7 @@ def die(msg, code=1):
 
 def get_soup(url):
     """ Funkce parsuje url a předchází chybám """
-    r = SESSION.get(url, headers=HEADERS, timeout=30)
+    r = SESSION.get(url, timeout=30)
     r.raise_for_status()
     return BeautifulSoup(r.text, "html.parser")
 
