@@ -16,10 +16,10 @@ DISTRICT_NAME = "Benešov"
 
 # pomocné funkce
 
-def die(msg, code=1):
-    """ v případě chyby ukončí program se zadaným textem """
+def die(msg):
+    """ napíše zadaný text a ukončí program """
     print(msg)
-    sys.exit(code)
+    sys.exit()
 
 def get_soup(url):
     """ Funkce parsuje url """
@@ -42,8 +42,7 @@ def find_ps32_for_district(ps3_soup, base_url, district_name):
                 href = a.get("href", "")
                 if "ps32" in href:
                     return urljoin(base_url, href)
-    die("Okres '{d}' se nenašel nebo nemá odkaz na 'Výběr obce'."
-        .format(d=district_name))
+    die(f"Okres '{district_name}' se nenašel nebo nemá odkaz na 'Výběr obce'.")
 
 def find_municipal_tables(soup):
     """
