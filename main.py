@@ -232,7 +232,7 @@ def write_csv(csv_name, rows, party_order):
     """ Vytvoří csv soubor s požadovanými údaji """
     header = ["kód obce", "název obce", "voliči v seznamu",
               "vydané obálky", "platné hlasy"] + party_order
-    with open(csv_name, "w", newline="", encoding="utf-8-sig") as f:
+    with open(csv_name, mode = "w") as f:
         w = csv.DictWriter(f, fieldnames=header, delimiter=";")
         w.writeheader()
         for r in rows:
