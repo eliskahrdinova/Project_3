@@ -13,7 +13,6 @@ from bs4 import BeautifulSoup
 # pomocné proměnné
 
 DISTRICT_NAME = "Benešov"
-SESSION = requests.Session()
 
 # pomocné funkce
 
@@ -24,16 +23,8 @@ def die(msg, code=1):
 
 def get_soup(url):
     """ Funkce parsuje url a předchází chybám """
-    r = SESSION.get(url, timeout=30)
-    r.raise_for_status()
+    r = requests.get(url)
     return BeautifulSoup(r.text, "html.parser")
-
-def to_int(text):
-    """ vyhledává čísla v textu tak aby kód neházel chyby """
-    if text is None:
-        return 0
-    digits = "".join(ch for ch in text if ch.isdigit())
-    return int(digits) if digits else 0
 
 def find_ps32_for_district(ps3_soup, base_url, district_name):
     """
@@ -133,7 +124,7 @@ def extract_summary_counts(soup):
         return None
 
     last6 = best_nums[-6:]
-    return (to_int(last6[0]), to_int(last6[1]), to_int(last6[4]))
+    return last6[0], last6[1], last6[4]
 
 def extract_party_votes(soup):
     """
@@ -166,7 +157,7 @@ def extract_party_votes(soup):
         for j in range(idx_name + 1, len(cells)):
             s = cells[j].get_text(" ", strip=True)
             if any(ch.isdigit() for ch in s):
-                votes = to_int(s); break
+                votes = s; break
         if votes is not None:
             parties[party] = parties.get(party, 0) + votes
     return parties if parties else None
