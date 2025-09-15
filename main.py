@@ -26,6 +26,16 @@ def get_soup(url):
     r = requests.get(url)
     return BeautifulSoup(r.text, "html.parser")
 
+def to_int(x):
+    """Bezpečně převede text na int (odstraní mezery, tečky, čárky)."""
+    if x is None:
+        return 0
+    x = str(x).strip()
+    x = x.replace('\xa0', '').replace(' ', '').replace('.', '').replace(',', '')
+    if x in ('', '-', '–'):
+        return 0
+    return int(x)
+
 def find_ps32_for_district(ps3_soup, base_url, district_name):
     """
     Funkce projde tabulky → najde řádek s názvem okresu
@@ -144,7 +154,8 @@ def extract_party_votes(soup):
                                 "Vydané obálky",
                                 "Platné hlasy"))
             if ("overflow" in cls) or cond:
-                idx_name = i; break
+                idx_name = i
+                break
         if idx_name is None:
             continue
 
@@ -156,9 +167,11 @@ def extract_party_votes(soup):
         for j in range(idx_name + 1, len(cells)):
             s = cells[j].get_text(" ", strip=True)
             if any(ch.isdigit() for ch in s):
-                votes = s; break
+                votes = s
+                break
         if votes is not None:
-            parties[party] = parties.get(party, 0) + votes
+            parties[party] = parties.get(party, 0) + to_int(votes)
+
     return parties if parties else None
 
 def is_precinct_list(soup):
